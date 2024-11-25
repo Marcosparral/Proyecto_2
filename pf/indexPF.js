@@ -1,78 +1,41 @@
-//Cuestionario interactivo de Dragon Ball 
-
-//Primero se crea una estructura para poder almacenar nuestras preguntas y respuestas.
-const preguntas = [
-    {
-    pregunta: "¿Quien fue el maestro de artes marciales de Gokú?",
-    alternativas: ["Krilin", "kakarotto", "Karin", "Roshi"],
-    respuesta: {},
-    },
-    {
-    pregunta: "¿Quien ganó el primer torneo de artes marciales en Dragon ball?",
-    alternativas: ["Gokú", "krilin", "Jackie Chun", "Yamcha"],
-    respuesta: {},
-    },
-    {
-    pregunta: "¿Quien es hermano de Gokú?",
-    alternativas: ["Krilin", "Raditz", "Piccolo", "Vegetta"],
-    respuesta: {},
-    },
-    {
-    pregunta: "¿Quien es el primer novio de Bulma?",
-    alternativas: ["Yamcha", "Gokú", "Vegetta", "Roshi"],
-    respuesta: {},
-    },
-    {
-    pregunta: "¿Cuántas son las esferas del Dragón?",
-    alternativas: ["6", "9", "8", "7"],
-    respuesta: {},
-    },
-    {
-    pregunta: "¿Como se llama el presentador del Torneo de Artes Marciales?",
-    alternativas: ["El anunciador", "Jotaro", "Dio", "Kuno Tattewaki"],
-    respuesta: {},
-    },
-    {
-    pregunta: "¿Cómo se llamaba el abuelito de Gokú?",
-    alternativas: ["Abuelito", "Tenchiu", "Son Gohan", "Roshi"],
-    respuesta: {},
-    },
-    {
-    pregunta: "¿Cómo se llama la esposa de Gokú",
-    alternativas: ["Bulma", "kakarotta", "Milk", "Dennisse"],
-    respuesta: {},
-    },
-];
-
-// Se crea la funcion para la encuesta
-const crearEncuesta = (preguntas) => {
+const crearPregunta = (nuevaPregunta, opciones) => {
     return {
-        preguntas: preguntas
-    }
+        nuevaPregunta: nuevaPregunta,
+        opciones: opciones,
+        resultado: {}
+    };
+};
+const nuevaEncuesta = (preguntas) => {
+    return {
+        preguntas: preguntas,
+    };
 };
 
-function agregarVoto (pregunta, alternativaSeleccionada){
-    if(pregunta.alternativas.includes(alternativaSeleccionada)){
-        if(pregunta.respuesta[alternativaSeleccionada]){
-            pregunta.respuesta[alternativaSeleccionada]++;
+function agregarVoto (pregunta, alternativaSeleccionada) {
+    if(pregunta.opciones.includes(alternativaSeleccionada)){
+        if(pregunta.opciones[alternativaSeleccionada]) {
+            pregunta.opciones[alternativaSeleccionada]++;
         } else {
-            pregunta.respuesta[alternativaSeleccionada] = 1;
+            pregunta.opciones[alternativaSeleccionada] = 1;
         }
+        mostrarResultado(pregunta);
     } else {
         console.log("Incorrecto");
     }
-};
+}
 
 function mostrarResultado (pregunta) {
-    console.log(`Resultado para la pregunta: "${pregunta.pregunta}":`);
-    for (let opcion of pregunta.alternativas){
-        console.log(`Alternativa "${opcion}": ${pregunta.respuesta[opcion] || 0} votos`);
+    console.log(`Resultado para la pregunta: "${pregunta.nuevaPregunta}":`);
+    for (let opcion of pregunta.opciones) {
+        console.log(`Alternativa "${opcion}": ${pregunta.resultado[opcion] || "no hay"} votos`);
     }
 };
 
 function votar(pregunta) {
     const alternativaSeleccionada = prompt(
-        `Pregunta :${pregunta.pregunta} Seleccione una alternativa (${pregunta.alternativas.join(", ")}):`);
+        `Pregunta: ${pregunta.nuevaEncuesta} Seleccione una alternativa (${pregunta.opciones.join(", ")}):`
+    );
+    
     if (alternativaSeleccionada !== null) {
         agregarVoto(pregunta,alternativaSeleccionada.trim());
     } else {
@@ -81,30 +44,39 @@ function votar(pregunta) {
 };
 
 function ejecutarEncuesta(){
-    const encuesta = crearEncuesta(preguntas);
+    const numPreguntas = parseInt(prompt("Bienvenido. ¿Cuantas preguntas harás?")
+    );
+    const preguntas = [];
 
-    function iniciarEncuesta(){
-        for (let i = 0; i < encuesta.preguntas.length; i++){
-            votar(encuesta.preguntas[i]);
-        }   
+    for (let i = 0; i < numPreguntas; i++) {
+        const nuevaPregunta = prompt(`Pregunta ${i + 1}":`);
+        const opciones = prompt(
+            `Ingrese las opciones separadas por una coma (,):`
+        )
+            .split(",")
+            .map((opcion) => opcion.trim());
+        const pregunta = crearPregunta(nuevaPregunta, opciones);
+        preguntas.push(pregunta);
     }
+    
 
 
-iniciarEncuesta();
+
+    const encuesta = nuevaEncuesta(preguntas);
+    
     let seguirVotando = true;
-
     while (seguirVotando) {
-        seguirVotando = confirm("¿Continuar?");
-        if (seguirVotando) {
-            iniciarEncuesta();
-
-        }else {
-            console.log("Completado.");
+        for(let i = 0;i < numPreguntas; i++) {
+            votar(encuesta.preguntas[i]);
         }
-    }
+            seguirVotando = confirm("¿Continuar?");
+    
+    };
 
-    encuesta.preguntas.forEach(mostrarResultado); 
+    console.log("resultados:");
+    encuesta.preguntas.forEach(mostrarResultado);
+    
 
-};
+}
 
 ejecutarEncuesta();
