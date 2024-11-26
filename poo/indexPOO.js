@@ -43,7 +43,7 @@ class Encuesta {
     }
 
     votar(pregunta) {
-        const alternativaSeleccionada = prompt (
+        const alternativaSeleccionada = prompt(
             `Pregunta ${pregunta.pregunta1} Seleccione una alternativa (${pregunta.alternativas.join(", ")});`
         );
         if (alternativaSeleccionada !== null) {
