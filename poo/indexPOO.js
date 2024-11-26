@@ -1,8 +1,8 @@
 // Encuesta POO de Dragon ball Z
 class Preguntas {
-    constructor (pregunta, alternativas) {
-        this.pregunta = pregunta;
-        this.alternativas = alternativas.map((alternativa) => alternativa.trim());
+    constructor (pregunta1, alternativas) {
+        this.pregunta1 = pregunta1;
+        this.alternativas = alternativas.map((alternativa) => alternativa.trim())
         this.resultado = {};
     }
 
@@ -15,58 +15,78 @@ agregarVoto(alternativaSeleccionada) {
     }
 }
 
-mostrarRespuesta(){
-    console.log(`Respuesta: "${this.pregunta}":`);
-    this.alternativas.forEach((alternativa)=> {
-        console.log(`Alternativa "${alternativa}": ${this.resultado[alternativa] || 0} votos `);    
-    });
-}
+mostrarRespuesta() {
+    console.log(`Resultado de la pregunta: "${this.pregunta1}":`);
+    this.alternativas.forEach((alternativa) => {
+        console.log(`Opcion "${alternativa}": ${this.resultado[alternativa] || 0} votos`);
+    })
 }
 
-
+}
 class Encuesta {
-    constructor (){
-        this.Preguntas = [];
+    constructor () {
+        this.preguntas = [];
     }
 
+    agregarPregunta(pregunta1, alternativas) {
+        const pregunta2 = new Preguntas(pregunta1, alternativas);
+        this.preguntas.push(pregunta2);
+    }
+    
     ejecutar(){
         let continuarEncuesta = true;
         while (continuarEncuesta) {
-            this.Preguntas.forEach((pregunta) => this.votar(pregunta));
+            this.preguntas.forEach((pregunta) => this.votar(pregunta));
             continuarEncuesta = confirm("¿Continuar?");
         }
+        this.mostrarResultadoFinal
     }
 
     votar(pregunta) {
         const alternativaSeleccionada = prompt (
-            `Pregunta ${pregunta.pregunta} Seleccione una alternativa (${pregunta.alternativas.join(", ")});`
+            `Pregunta ${pregunta.pregunta1} Seleccione una alternativa (${pregunta.alternativas.join(", ")});`
         );
         if (alternativaSeleccionada !== null) {
             pregunta.agregarVoto(alternativaSeleccionada.trim());
-            console.log("Alternativa seleccionada", alternativaSeleccionada);
-            console.log("resultado encuesta: ");
-            this.Preguntas.forEach((pregunta) => pregunta.mostrarRespuesta());
+            
         } else {
             console.log("¡Adios!");
         }
-    }
+    };
+
+        mostrarResultadoFinal() {
+            console.log("Resultado final:");
+            this.preguntas.forEach((pregunta) => pregunta.mostrarRespuesta())
+    };
+
 };
 
+const crearEncuestaFinal = () => {
+    const encuesta = new Encuesta();
+    const numeroDePreguntas = parseInt(
+        prompt("¿Cuantas preguntas realizarás")
+    );
+
+    for (let i = 0; i < numeroDePreguntas; i++) {
+        const pregunta1 = prompt(`Ingrese la pregunta ${i + 1}:`);
+        const opciones = prompt(`Ingrese las opciones ${i + 1} separadas por una coma (,):`
+        ).split(",");
+        encuesta.agregarPregunta(pregunta1, opciones);
+    }
+
+    return encuesta;
+}
+ const encuesta = crearEncuestaFinal();
+ encuesta.ejecutar();
 
 
 
 
-const encuesta = new Encuesta();
 
-encuesta.Preguntas = [
-    new Preguntas("¿Quién fue el maestro de artes marciales de Gokú?", ["Krilin", "Kakarotto", "Karin", "Roshi"]),
-    new Preguntas("¿Quién gano el primer torneo de artes marciales en Dragon Ball?", ["Goku", "Krilin", "Jackie Chun", "Yamcha"]),
-    new Preguntas("¿Quien es el hermano de Goku?", ["krilin", "raditz", "piccolo", "Vegetta"]),
-    new Preguntas("¿Quién es el primer novio de Bulma?", ["Yamcha", "Goku", "Vegetta", "Roshi"]),
-    new Preguntas("¿Cuantas son las esferas del Dragon?", ["6", "9", "8", "7"]),
-    new Preguntas("¿Como se llama el presentador del torneo de Artes Marciales?", ["El anunciador", "Jotaro", "Dio", "Kuno Tattewaki"]),
-    new Preguntas("¿Como se llamaba el abuelito de Goku?", ["Abuelito", "Tenchiu", "Son Gohan", "Roshi"]),
-    new Preguntas("¿Como se llama la esposa de Goku?", ["Bulma", "Kakarotta", "Milk", "Dennisse"]),
-];
 
-encuesta.ejecutar();
+
+
+
+
+
+
